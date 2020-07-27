@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	cognito "github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 	"github.com/joho/godotenv"
@@ -28,49 +27,36 @@ func main() {
 		log.Fatal("Error loading .env file.")
 	}
 
-	// env variables declaration
-	UserPoolID := os.Getenv("USER_POOL_ID")
-	//AppClientID := os.Getenv("APP_CLIENT_ID")
-	// fmt.Println(os.Getenv("AWS_ACCESS_KEY_ID"))
-
-	// config aws region
+	// creating aws session
 	conf := &aws.Config{Region: aws.String("us-east-1")}
-
-	// init session
-	// sessInit, err := session.NewSession(conf)
-	//if err != nil {
-	//fmt.Println("Failed to create session: ", err)
-	//return
-	//}
-
-	sess := session.Must(session.NewSession(conf))
-
-	// test new credentials
-	creds, err := stscreds.NewCredentials(sess, "arn:aws:iam::043735794078:user/daragon")
+	sess, err := session.NewSession(conf)
 	if err != nil {
-		log.Fatal("NOPE")
+		panic(err)
 	}
-	fmt.Println(creds)
 
-	// New cognito instance declaration
-	svc := cognito.New(sess)
+	// App definition
+	cli := App{
+		CognitoClient: cognito.New(sess),
+		UserPoolID:    os.Getenv("USER_POOL_ID"),
+		AppClientID:   os.Getenv("APP_CLIENT_ID"),
+	}
 
 	params := &cognito.ListUsersInput{
-		UserPoolId: aws.String(UserPoolID),
+		UserPoolId: &cli.UserPoolID,
 		AttributesToGet: []*string{
 			aws.String("email"),
 		},
 	}
 
 	// List users coming from User Pool
-	resp, err := svc.ListUsers(params)
+	resp, err := cli.CognitoClient.ListUsers(params)
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	fmt.Println(resp)
+	fmt.Println(len(resp.Users))
 
 	// echo request
 	e := echo.New()
@@ -78,5 +64,6 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
+	// declaring the port
 	e.Logger.Fatal(e.Start(":1323"))
 }
