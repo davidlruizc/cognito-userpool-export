@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dockergo/app"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,13 +13,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 )
-
-// App holds internals for auth flow.
-type App struct {
-	CognitoClient *cognito.CognitoIdentityProvider
-	UserPoolID    string
-	AppClientID   string
-}
 
 func main() {
 	// dot env initial config.
@@ -35,7 +29,7 @@ func main() {
 	}
 
 	// App definition
-	cli := App{
+	cli := app.App{
 		CognitoClient: cognito.New(sess),
 		UserPoolID:    os.Getenv("USER_POOL_ID"),
 		AppClientID:   os.Getenv("APP_CLIENT_ID"),
