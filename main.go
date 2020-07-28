@@ -40,6 +40,7 @@ func main() {
 		AttributesToGet: []*string{
 			aws.String("email"),
 		},
+		Limit: aws.Int64(60),
 	}
 
 	// List users coming from User Pool
