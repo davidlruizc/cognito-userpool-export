@@ -1,15 +1,12 @@
 package main
 
 import (
-	"context"
 	"dockergo/app"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	cognito "github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 	"github.com/joho/godotenv"
@@ -17,8 +14,6 @@ import (
 )
 
 func main() {
-	var users []*cognito.UserType
-
 	// dot env initial config.
 	err := godotenv.Load()
 	if err != nil {
@@ -39,34 +34,7 @@ func main() {
 		AppClientID:   os.Getenv("APP_CLIENT_ID"),
 	}
 
-	params := &cognito.ListUsersInput{
-		UserPoolId: &cli.UserPoolID,
-		AttributesToGet: []*string{
-			aws.String("email"),
-		},
-		Limit: aws.Int64(40),
-	}
-
-	ctx := context.Background()
-
-	// request pagination
-	p := request.Pagination{
-		NewRequest: func() (*request.Request, error) {
-			req, _ := cli.CognitoClient.ListUsersRequest(params)
-			req.SetContext(ctx)
-			return req, nil
-		},
-	}
-
-	// pagination iterator and append the array with results
-	for p.Next() {
-		page := p.Page().(*cognito.ListUsersOutput)
-		for _, obj := range page.Users {
-			users = append(users, obj)
-		}
-	}
-
-	fmt.Println(len(users))
+	users := cli.CognitoUserPoolPaginated().Users
 
 	// echo request
 	e := echo.New()
