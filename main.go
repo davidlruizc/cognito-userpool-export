@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"dockergo/app"
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	cognito "github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 	"github.com/joho/godotenv"
@@ -15,6 +17,8 @@ import (
 )
 
 func main() {
+	var users []*cognito.UserType
+
 	// dot env initial config.
 	err := godotenv.Load()
 	if err != nil {
@@ -40,23 +44,34 @@ func main() {
 		AttributesToGet: []*string{
 			aws.String("email"),
 		},
-		Limit: aws.Int64(60),
+		Limit: aws.Int64(40),
 	}
 
-	// List users coming from User Pool
-	resp, err := cli.CognitoClient.ListUsers(params)
+	ctx := context.Background()
 
-	if err != nil {
-		fmt.Println(err.Error())
-		return
+	// request pagination
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			req, _ := cli.CognitoClient.ListUsersRequest(params)
+			req.SetContext(ctx)
+			return req, nil
+		},
 	}
 
-	fmt.Println(len(resp.Users))
+	// pagination iterator and append the array with results
+	for p.Next() {
+		page := p.Page().(*cognito.ListUsersOutput)
+		for _, obj := range page.Users {
+			users = append(users, obj)
+		}
+	}
+
+	fmt.Println(len(users))
 
 	// echo request
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
+		return c.JSON(http.StatusOK, users)
 	})
 
 	// declaring the port
