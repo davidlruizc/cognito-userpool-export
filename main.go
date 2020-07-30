@@ -22,8 +22,10 @@ func main() {
 		log.Fatal("Error loading .env file.")
 	}
 
+	region := os.Getenv("AWS_REGION")
+
 	// creating aws session
-	conf := &aws.Config{Region: aws.String("us-east-1")}
+	conf := &aws.Config{Region: aws.String(region)}
 	sess, err := session.NewSession(conf)
 	if err != nil {
 		panic(err)
