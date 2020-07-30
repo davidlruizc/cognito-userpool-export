@@ -20,7 +20,16 @@ Clone the project
 https://github.com/davidlruizc/cognito-userpool-export.git
 ```
 
-Run
+Add `.env` file with the follow data
+
+```sh
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+USER_POOL_ID=
+APP_CLIENT_ID=
+```
+
+Then you can run
 
 ```sh
 go run main.go
