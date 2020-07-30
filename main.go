@@ -2,6 +2,8 @@ package main
 
 import (
 	"dockergo/app"
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -35,6 +37,10 @@ func main() {
 	}
 
 	users := cli.CognitoUserPoolPaginated().Users
+
+	// export data in JSON file
+	rankingsJson, _ := json.Marshal(users)
+	err = ioutil.WriteFile("user-pool-output.json", rankingsJson, 0644)
 
 	// echo request
 	e := echo.New()
