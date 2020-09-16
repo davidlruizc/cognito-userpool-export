@@ -1,7 +1,7 @@
 package main
 
 import (
-	"userpool-connection/cmd"
+	"dockergo/cmd"
 )
 
 // func main() {
