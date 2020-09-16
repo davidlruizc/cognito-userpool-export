@@ -1,0 +1,6 @@
+version: '3.3'
+services:
+  userpool-connection:
+    build: .
+    container_name: 'userpool-connection'
+    ports: 1323:1323
