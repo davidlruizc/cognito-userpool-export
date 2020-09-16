@@ -8,8 +8,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "poolcog",
-	Short: "Poolcog it's a cognito user pool export CLI",
+	Use:   "poolcognito",
+	Short: "Poolcognito it's a cognito user pool export CLI",
 	Long:  `A very useful way to export your users pool from AWS cognito user pool service.`,
 	Run: func(cmd *cobra.Command, arg []string) {
 		fmt.Println("TEST command")

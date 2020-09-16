@@ -1,10 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/spf13/cobra"
+	"userpool-connection/cmd"
 )
 
 // func main() {
@@ -46,18 +43,6 @@ import (
 // 	e.Logger.Fatal(e.Start(":1323"))
 // }
 
-var rootCmd = &cobra.Command{
-	Use:   "poolcog",
-	Short: "Poolcog it's a cognito user pool export CLI",
-	Long:  `A very useful way to export your users pool from AWS cognito user pool service.`,
-	Run: func(cmd *cobra.Command, arg []string) {
-		fmt.Println("TEST command")
-	},
-}
-
 func main() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	cmd.Execute()
 }
