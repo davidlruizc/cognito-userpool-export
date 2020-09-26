@@ -25,14 +25,15 @@ Available commands:
 ```sh
 go run main.go export
 ```
-export `.json`file in the root path where you cloned the project.
 
+export `.json`file in the root path where you cloned the project.
 
 ## TODO
 
 - [ ] Flag for userpool id and client id.
 - [ ] Command to export a `json` or `csv` file.
 - [ ] Add location path to export the file generated.
+- [ ] Allow add custom `aws` credentials.
 
 ## Getting started with go
 
