@@ -23,14 +23,20 @@ AWS_REGION=
 Available commands:
 
 ```sh
-go run main.go export
+go run main.go export --region <aws-region> --poolid <user-pool-id> --clientid <app-client-id>
+```
+
+To see the available commands con `export`
+
+```sh
+go run main.go export --help
 ```
 
 export `.json`file in the root path where you cloned the project.
 
 ## TODO
 
-- [ ] Flag for userpool id and client id.
+- [x] Flag for userpool id and client id.
 - [ ] Command to export a `json` or `csv` file.
 - [ ] Add location path to export the file generated.
 - [ ] Allow add custom `aws` credentials.
