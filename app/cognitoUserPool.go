@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/request"
@@ -10,17 +11,14 @@ import (
 )
 
 // CognitoUserPoolPaginated user pool pagination
-func (cli *App) CognitoUserPoolPaginated() *cognitoidentityprovider.ListUsersOutput {
+func (cli *App) CognitoUserPoolPaginated() (*cognitoidentityprovider.ListUsersOutput, error) {
 	var users []*cognito.UserType
 
 	ctx := context.Background()
 
 	params := &cognito.ListUsersInput{
 		UserPoolId: &cli.UserPoolID,
-		AttributesToGet: []*string{
-			aws.String("email"),
-		},
-		Limit: aws.Int64(40),
+		Limit:      aws.Int64(40),
 	}
 
 	p := request.Pagination{
@@ -41,5 +39,9 @@ func (cli *App) CognitoUserPoolPaginated() *cognitoidentityprovider.ListUsersOut
 	output := &cognito.ListUsersOutput{}
 	output.SetUsers(users)
 
-	return output
+	if len(users) > 0 {
+		return output, nil
+	}
+
+	return nil, errors.New("Error: Must be an error on your user pool id or app client id values")
 }

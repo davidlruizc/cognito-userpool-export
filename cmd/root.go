@@ -32,6 +32,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	// test flags
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.userpool-connection.yaml)")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
