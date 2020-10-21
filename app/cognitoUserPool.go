@@ -17,10 +17,7 @@ func (cli *App) CognitoUserPoolPaginated() *cognitoidentityprovider.ListUsersOut
 
 	params := &cognito.ListUsersInput{
 		UserPoolId: &cli.UserPoolID,
-		AttributesToGet: []*string{
-			aws.String("email"),
-		},
-		Limit: aws.Int64(40),
+		Limit:      aws.Int64(40),
 	}
 
 	p := request.Pagination{

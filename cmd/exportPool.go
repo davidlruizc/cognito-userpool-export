@@ -29,7 +29,7 @@ var exportCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(exportCmd)
-	// exportCmd.Flags().BoolP("float", "f", false, "Add Floating Numbers")
+	exportCmd.Flags().BoolP("float", "f", false, "Add Floating Numbers")
 }
 
 func exportPoolCognito() {
